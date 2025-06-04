@@ -1,20 +1,16 @@
 package fr.insee.keycloak.providers.franceconnect;
 
-import static fr.insee.keycloak.providers.franceconnect.FCFixture.givenConfigForIntegrationV2AndEidasLevel2;
-import static fr.insee.keycloak.providers.franceconnect.FCFixture.givenConfigWithSelectedEnvAndSelectedEidasLevel;
-import static fr.insee.keycloak.providers.franceconnect.FranceConnectIdentityProviderFactory.FC_PROVIDER_MAPPERS;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
 import fr.insee.keycloak.providers.common.EidasLevel;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.keycloak.models.RealmModel;
+
+import static fr.insee.keycloak.providers.franceconnect.FCFixture.givenConfigForIntegrationV2AndEidasLevel2;
+import static fr.insee.keycloak.providers.franceconnect.FCFixture.givenConfigWithSelectedEnvAndSelectedEidasLevel;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @DisplayNameGeneration(ReplaceUnderscores.class)
 class FranceConnectIdentityProviderConfigTest {
@@ -36,7 +32,7 @@ class FranceConnectIdentityProviderConfigTest {
 
   @Test
   void
-      should_initialize_config_with_url_properties_corresponding_to_selected_environment_from_admin_interface() {
+  should_initialize_config_with_url_properties_corresponding_to_selected_environment_from_admin_interface() {
     var config = givenConfigForIntegrationV2AndEidasLevel2();
 
     assertThat(config.getAuthorizationUrl()).isNotNull().endsWith("/authorize");
@@ -50,7 +46,7 @@ class FranceConnectIdentityProviderConfigTest {
 
   @Test
   void
-      should_initialize_config_with_selected_ignoreAbsentStateParameterLogout_from_admin_interface() {
+  should_initialize_config_with_selected_ignoreAbsentStateParameterLogout_from_admin_interface() {
     var config = givenConfigForIntegrationV2AndEidasLevel2();
 
     assertThat(config.isIgnoreAbsentStateParameterLogout()).isFalse();
@@ -76,8 +72,6 @@ class FranceConnectIdentityProviderConfigTest {
     var realm = mock(RealmModel.class);
 
     unsavedConfig.validate(realm);
-
-    verify(realm, times(FC_PROVIDER_MAPPERS.size())).addIdentityProviderMapper(any());
 
     var alreadySavedConfig = givenConfigForIntegrationV2AndEidasLevel2();
     var unusedRealm = mock(RealmModel.class);

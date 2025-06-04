@@ -25,13 +25,6 @@ public final class FranceConnectIdentityProviderFactory
 
   static final FCEnvironment DEFAULT_FC_ENVIRONMENT = FCEnvironment.INTEGRATION_V1;
 
-  static final List<IdentityProviderMapperModel> FC_PROVIDER_MAPPERS = List.of(
-      createUserAttributeMapper(FC_PROVIDER_ID, "lastName", "family_name", "lastName"),
-      createUserAttributeMapper(FC_PROVIDER_ID, "firstName", "given_name", "firstName"),
-      createUserAttributeMapper(FC_PROVIDER_ID, "email", "email", "email"),
-      createHardcodedAttributeMapper(FC_PROVIDER_ID, "provider", "provider", "FC")
-  );
-
   @Override
   public String getName() {
     return FC_PROVIDER_NAME;
