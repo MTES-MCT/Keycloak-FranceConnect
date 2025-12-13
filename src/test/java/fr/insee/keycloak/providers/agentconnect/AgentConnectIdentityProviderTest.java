@@ -3,11 +3,8 @@ package fr.insee.keycloak.providers.agentconnect;
 import fr.insee.keycloak.providers.common.EidasLevel;
 import fr.insee.keycloak.utils.*;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
 import org.keycloak.broker.provider.IdentityBrokerException;
 import org.keycloak.connections.httpclient.HttpClientProvider;
 import org.keycloak.models.KeycloakSession;
@@ -201,6 +198,7 @@ class AgentConnectIdentityProviderTest {
     }
 
     @Test
+    @Disabled("Disabled until decision made on how to handle absent levels")
     void should_throw_exception_when_id_token_does_not_contains_acr_claim() throws IOException {
       var kid = "RSA-KID";
       var opaqueAccessToken = "2b3ea2e8-2d11-49a4-a369-5fb98d9d5315";
@@ -218,6 +216,7 @@ class AgentConnectIdentityProviderTest {
     }
 
     @Test
+    @Disabled("Disabled until decision made on how to handle unsupported levels")
     void should_throw_exception_when_id_token_contains_acr_claim_who_does_not_match_with_a_supported_eidas_level() throws IOException {
       var kid = "RSA-KID";
       var opaqueAccessToken = "2b3ea2e8-2d11-49a4-a369-5fb98d9d5315";

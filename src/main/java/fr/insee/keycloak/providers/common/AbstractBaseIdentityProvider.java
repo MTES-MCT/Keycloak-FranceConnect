@@ -163,7 +163,8 @@ public abstract class AbstractBaseIdentityProvider<T extends AbstractBaseProvide
       var idToken = (JsonWebToken) federatedIdentity.getContextData().get(VALIDATED_ID_TOKEN);
       var acrClaim = (String) idToken.getOtherClaims().get(ACR_CLAIM_NAME);
 
-      var fcReturnedEidasLevel = EidasLevel.getOrDefault(acrClaim, null);
+      // We use default value EIDAS1 if acr claim is not present or a value not matching expected ones
+      var fcReturnedEidasLevel = EidasLevel.getOrDefault(acrClaim, EidasLevel.EIDAS1);
       var expectedEidasLevel = getConfig().getEidasLevel();
 
       if (fcReturnedEidasLevel == null) {
