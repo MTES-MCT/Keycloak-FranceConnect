@@ -8,9 +8,6 @@ import org.keycloak.broker.provider.AuthenticationRequest;
 import org.keycloak.broker.provider.IdentityBrokerException;
 import org.keycloak.models.KeycloakSession;
 
-import java.net.URI;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -40,9 +37,13 @@ final class AgentConnectIdentityProvider
     UriBuilder uriBuilder;
 
     if (config.isMfaEnabled()) {
-      var baseUri = super.createAuthorizationUrl(request).build().toString();
-      var encodedClaims = URLEncoder.encode(buildMfaClaimsParam(), StandardCharsets.UTF_8);
-      uriBuilder = UriBuilder.fromUri(URI.create(baseUri + "&claims=" + encodedClaims));
+      // No acr_values — use claims parameter exclusively for MFA ACR negotiation.
+      // Template expansion in build() percent-encodes the JSON value correctly.
+      uriBuilder = UriBuilder.fromUri(
+          super.createAuthorizationUrl(request)
+              .queryParam("claims", "{claimsParam}")
+              .build(buildMfaClaimsParam())
+      );
     } else {
       request
           .getAuthenticationSession()
@@ -67,10 +68,9 @@ final class AgentConnectIdentityProvider
   }
 
   private static String buildMfaClaimsParam() {
-    return "{\"id_token\":{\"acr\":{\"essential\":true,\"values\":"
-        + ACCEPTED_MFA_ACR_VALUES.stream()
-            .map(acrValue -> "\"" + acrValue + "\"")
-            .collect(Collectors.joining(",", "[", "]"))
-        + "}}}";
+    var values = ACCEPTED_MFA_ACR_VALUES.stream()
+        .map(v -> "\"" + v + "\"")
+        .collect(Collectors.joining(",", "[", "]"));
+    return "{\"id_token\":{\"acr\":{\"essential\":true,\"values\":" + values + "}}}";
   }
 }
