@@ -19,6 +19,7 @@ final class AgentConnectIdentityProvider
     extends AbstractBaseIdentityProvider<AgentConnectIdentityProviderConfig> {
 
   static final String MFA_INSUFFICIENT_ACR_MESSAGE_KEY = "agentconnectMfaRequired";
+  static final String MFA_INSUFFICIENT_ACR_ERROR_MESSAGE = "The returned ACR value is insufficient for MFA authentication";
 
   private static final List<String> ACCEPTED_MFA_ACR_VALUES = List.of(
       "eidas2",
@@ -58,7 +59,7 @@ final class AgentConnectIdentityProvider
   protected void validateAcrClaim(String acrClaim) {
     if (getConfig().isMfaEnabled()) {
       if (!ACCEPTED_MFA_ACR_VALUES_SET.contains(acrClaim)) {
-        throw new IdentityBrokerException(MFA_INSUFFICIENT_ACR_MESSAGE_KEY);
+        throw new IdentityBrokerException(MFA_INSUFFICIENT_ACR_ERROR_MESSAGE);
       }
     } else {
       super.validateAcrClaim(acrClaim);

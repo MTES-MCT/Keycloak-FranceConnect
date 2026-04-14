@@ -10,10 +10,14 @@ import org.keycloak.connections.httpclient.HttpClientProvider;
 import org.keycloak.models.KeycloakSession;
 import org.mockito.Mockito;
 
+import com.nimbusds.jwt.JWTClaimsSet;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import static fr.insee.keycloak.providers.agentconnect.ACFixture.*;
@@ -265,14 +269,14 @@ class AgentConnectIdentityProviderTest {
       }
 
       @Test
-      void should_include_all_proconnect_2fa_acr_values_in_claims_param_when_mfa_enabled() throws java.net.URISyntaxException {
+      void should_include_all_proconnect_2fa_acr_values_in_claims_param_when_mfa_enabled() throws URISyntaxException {
         var request = givenAuthenticationRequest(session);
 
         var authorizationUrl = mfaProvider.createAuthorizationUrl(request).build();
         var rawQuery = authorizationUrl.getRawQuery();
 
         assertThat(rawQuery).contains("claims=");
-        var decodedQuery = java.net.URLDecoder.decode(rawQuery, java.nio.charset.StandardCharsets.UTF_8);
+        var decodedQuery = URLDecoder.decode(rawQuery, StandardCharsets.UTF_8);
         assertThat(decodedQuery).contains("eidas2");
         assertThat(decodedQuery).contains("eidas3");
         assertThat(decodedQuery).contains("self-asserted-2fa");
@@ -312,7 +316,7 @@ class AgentConnectIdentityProviderTest {
         assertMfaAcrIsAccepted(CONSISTENCY_CHECKED_2FA_JWT);
       }
 
-      private void assertMfaAcrIsAccepted(com.nimbusds.jwt.JWTClaimsSet jwtClaimsSet) throws IOException {
+      private void assertMfaAcrIsAccepted(JWTClaimsSet jwtClaimsSet) throws IOException {
         var kid = "RSA-KID";
         var opaqueAccessToken = "2b3ea2e8-2d11-49a4-a369-5fb98d9d5315";
         var signedIdToken = givenAnRSASignedJWTWithRegisteredKidInJWKS(kid, jwtClaimsSet, publicKeysStore);
@@ -338,7 +342,7 @@ class AgentConnectIdentityProviderTest {
 
         assertThatThrownBy(() -> mfaProvider.getFederatedIdentity(tokenEndpointResponse))
             .isInstanceOf(IdentityBrokerException.class)
-            .hasMessage(AgentConnectIdentityProvider.MFA_INSUFFICIENT_ACR_MESSAGE_KEY);
+            .hasMessage(AgentConnectIdentityProvider.MFA_INSUFFICIENT_ACR_ERROR_MESSAGE);
       }
     }
   }
