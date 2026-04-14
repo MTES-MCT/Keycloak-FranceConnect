@@ -68,18 +68,18 @@
     <maven.source.plugin.version>3.3.0</maven.source.plugin.version>
     <maven.javadoc.plugin.version>3.5.0</maven.javadoc.plugin.version>
 
-    <keycloak.version>26.2.2</keycloak.version>
+    <keycloak.version>26.5.3</keycloak.version>
 
     <!-- Testing Tools -->
     <junit.jupiter.version>5.10.0</junit.jupiter.version>
-    <assertj.version>3.24.2</assertj.version>
+    <assertj.version>3.27.7</assertj.version>
     <mockito.version>5.4.0</mockito.version>
 
     <!-- Implementation of jakarta.ws.rs.ext.RuntimeDelegate for starting endpoints in tests -->
     <resteasy.version>6.2.7.Final</resteasy.version>
 
     <!-- Helper to build public/private keys for testing -->
-    <nimbus.jose-jwt.version>9.37.2</nimbus.jose-jwt.version>
+    <nimbus.jose-jwt.version>10.0.2</nimbus.jose-jwt.version>
   </properties>
 
   <build>
